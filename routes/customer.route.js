@@ -44,33 +44,33 @@ router.put("/:id", updateCustomer);
 router.delete("/:id", deleteCustomer);
 
 // address
-// [GET] /:id/address
+// [GET] customers/:id/address
 router.get("/:id/addresses", getAllAddress);
 
-// [GET] /:id/address/:id
+// [GET] customers/:id/address/:id
 router.get("/:id/addresses/:id", getAddressById);
 
-// [POST] /:id/address
+// [POST] customers/:id/address
 router.post("/:id/addresses", createAddress);
 
 // contact
-// [GET] /:id/contact
+// [GET] customers/:id/contact
 router.get("/:id/contacts", getAllContact);
 
-// [GET] /:id/contact/:id
+// [GET] customers/:id/contact/:id
 router.get("/:id/contacts/:id", getContactById);
 
-// [POST] /:id/contact
+// [POST] customers/:id/contact
 router.post("/:id/contacts", createContact);
 
 // order
-// [GET] /:id/order
+// [GET] customers/:id/order
 router.get("/:id/orders", getAllOrder);
 
-// [GET] /:id/order/:id
+// [GET] customers/:id/order/:id
 router.get("/:id/orders/:id", getOrderById);
 
-// [POST] /:id/order
+// [POST] customers/:id/order
 router.post("/:id/orders", createOrder);
 
 module.exports = router;
