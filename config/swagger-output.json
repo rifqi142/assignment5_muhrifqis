@@ -1,0 +1,2291 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "assignment-5-customer-data",
+    "version": "1.0.0",
+    "description": "API for managing customers",
+    "contact": {}
+  },
+  "servers": [],
+  "paths": {
+    "/customers": {
+      "get": {
+        "summary": "Get all customers",
+        "description": "Retrieves a list of all customers with their associated addresses, contacts, and orders.",
+        "operationId": "getAllCustomers",
+        "tags": ["Customers"],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved customers list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "cs_id": {
+                        "type": "integer",
+                        "description": "Customer ID"
+                      },
+                      "cs_fullName": {
+                        "type": "string",
+                        "description": "Full name of the customer"
+                      },
+                      "cs_email": {
+                        "type": "string",
+                        "description": "Email address of the customer"
+                      },
+                      "cs_gender": {
+                        "type": "string",
+                        "enum": ["Male", "Female"],
+                        "description": "Gender of the customer"
+                      },
+                      "cs_birthDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Birth date of the customer"
+                      },
+                      "addresses": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "adrs_id": {
+                              "type": "integer",
+                              "description": "Address ID"
+                            },
+                            "adrs_street": {
+                              "type": "string",
+                              "description": "Street address"
+                            },
+                            "adrs_city": {
+                              "type": "string",
+                              "description": "City"
+                            },
+                            "adrs_state": {
+                              "type": "string",
+                              "description": "State"
+                            },
+                            "adrs_postalCode": {
+                              "type": "string",
+                              "description": "Postal code"
+                            }
+                          }
+                        }
+                      },
+                      "contacts": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "cnt_id": {
+                              "type": "integer",
+                              "description": "Contact ID"
+                            },
+                            "cnt_phone": {
+                              "type": "string",
+                              "description": "Phone number"
+                            },
+                            "cnt_fax": {
+                              "type": "string",
+                              "description": "Fax number"
+                            }
+                          }
+                        }
+                      },
+                      "orders": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "ord_id": {
+                              "type": "integer",
+                              "description": "Order ID"
+                            },
+                            "ord_date": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Order date"
+                            },
+                            "ord_status": {
+                              "type": "string",
+                              "enum": ["pending", "completed", "cancelled"],
+                              "description": "Order status"
+                            },
+                            "ord_totalAmount": {
+                              "type": "number",
+                              "format": "decimal",
+                              "description": "Total amount of the order"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customers not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customers not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new customer",
+        "description": "Create a new customer with full name, email, gender, and birth date.",
+        "operationId": "createCustomer",
+        "tags": ["Customers"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cs_fullName": {
+                    "type": "string",
+                    "description": "Full name of the customer",
+                    "example": "John Doe"
+                  },
+                  "cs_email": {
+                    "type": "string",
+                    "description": "Email address of the customer",
+                    "example": "john.doe@example.com"
+                  },
+                  "cs_gender": {
+                    "type": "string",
+                    "description": "Gender of the customer",
+                    "enum": ["Male", "Female", "Other"],
+                    "example": "Male"
+                  },
+                  "cs_birthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Birth date of the customer",
+                    "example": "1990-01-01"
+                  }
+                },
+                "required": [
+                  "cs_fullName",
+                  "cs_email",
+                  "cs_gender",
+                  "cs_birthDate"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Customer successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customer created"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "cs_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "cs_fullName": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "cs_email": {
+                          "type": "string",
+                          "example": "john.doe@example.com"
+                        },
+                        "cs_gender": {
+                          "type": "string",
+                          "example": "Male"
+                        },
+                        "cs_birthDate": {
+                          "type": "string",
+                          "format": "date",
+                          "example": "1990-01-01"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing required fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All fields are required"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - Email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Email already exists"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 409
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 500
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{id}": {
+      "get": {
+        "summary": "Get customer by ID",
+        "description": "Retrieves a customer by their unique ID with their associated addresses, contacts, and orders.",
+        "operationId": "getCustomerById",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer to retrieve",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the customer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cs_id": {
+                      "type": "integer",
+                      "description": "Customer ID"
+                    },
+                    "cs_fullName": {
+                      "type": "string",
+                      "description": "Full name of the customer"
+                    },
+                    "cs_email": {
+                      "type": "string",
+                      "description": "Email address of the customer"
+                    },
+                    "cs_gender": {
+                      "type": "string",
+                      "enum": ["Male", "Female"],
+                      "description": "Gender of the customer"
+                    },
+                    "cs_birthDate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Birth date of the customer"
+                    },
+                    "addresses": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "adrs_id": {
+                            "type": "integer",
+                            "description": "Address ID"
+                          },
+                          "adrs_street": {
+                            "type": "string",
+                            "description": "Street address"
+                          },
+                          "adrs_city": {
+                            "type": "string",
+                            "description": "City"
+                          },
+                          "adrs_state": {
+                            "type": "string",
+                            "description": "State"
+                          },
+                          "adrs_postalCode": {
+                            "type": "string",
+                            "description": "Postal code"
+                          }
+                        }
+                      }
+                    },
+                    "contacts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "cnt_id": {
+                            "type": "integer",
+                            "description": "Contact ID"
+                          },
+                          "cnt_phone": {
+                            "type": "string",
+                            "description": "Phone number"
+                          },
+                          "cnt_fax": {
+                            "type": "string",
+                            "description": "Fax number"
+                          }
+                        }
+                      }
+                    },
+                    "orders": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ord_id": {
+                            "type": "integer",
+                            "description": "Order ID"
+                          },
+                          "ord_date": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Order date"
+                          },
+                          "ord_status": {
+                            "type": "string",
+                            "enum": ["pending", "completed", "cancelled"],
+                            "description": "Order status"
+                          },
+                          "ord_totalAmount": {
+                            "type": "number",
+                            "format": "decimal",
+                            "description": "Total amount of the order"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customer not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update customer by ID",
+        "description": "Updates the details of a customer by their unique ID. All fields (`cs_fullName`, `cs_email`, `cs_gender`, `cs_birthDate`) are required.",
+        "operationId": "updateCustomer",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer to update",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cs_fullName": {
+                    "type": "string",
+                    "description": "Full name of the customer"
+                  },
+                  "cs_email": {
+                    "type": "string",
+                    "description": "Email address of the customer"
+                  },
+                  "cs_gender": {
+                    "type": "string",
+                    "enum": ["Male", "Female"],
+                    "description": "Gender of the customer"
+                  },
+                  "cs_birthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Birth date of the customer"
+                  }
+                },
+                "required": [
+                  "cs_fullName",
+                  "cs_email",
+                  "cs_gender",
+                  "cs_birthDate"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the customer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customer updated"
+                    },
+                    "previousDataCustomer": {
+                      "type": "object",
+                      "properties": {
+                        "cs_id": {
+                          "type": "integer",
+                          "description": "Customer ID"
+                        },
+                        "cs_fullName": {
+                          "type": "string",
+                          "description": "Full name of the customer"
+                        },
+                        "cs_email": {
+                          "type": "string",
+                          "description": "Email address of the customer"
+                        },
+                        "cs_gender": {
+                          "type": "string",
+                          "enum": ["Male", "Female"],
+                          "description": "Gender of the customer"
+                        },
+                        "cs_birthDate": {
+                          "type": "string",
+                          "format": "date",
+                          "description": "Birth date of the customer"
+                        }
+                      }
+                    },
+                    "updatedCustomer": {
+                      "type": "integer",
+                      "description": "Number of rows updated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, required fields are missing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All fields are required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customer not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete customer by ID",
+        "description": "Deletes a customer by their unique ID. If the customer does not exist, a 404 error will be returned.",
+        "operationId": "deleteCustomer",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer to delete",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the customer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customer deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customer not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{id}/addresses": {
+      "post": {
+        "summary": "Create a new address for a specific customer",
+        "description": "Create a new address and associate it with a specific customer using the customer's ID.",
+        "operationId": "createAddress",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer to associate with the new address.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAddressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created a new address for the customer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - all fields must be filled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All fields must be filled"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customer not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all addresses for a specific customer",
+        "description": "Retrieve a list of all addresses for a given customer.",
+        "operationId": "getAllAddress",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer whose addresses are to be retrieved.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all addresses for the customer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Address"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customer not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/addresses/{addressId}": {
+      "get": {
+        "summary": "Get address by ID",
+        "description": "Retrieve a specific address by its ID, including the associated customer details.",
+        "operationId": "getAddressById",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer associated with the address.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "addressId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the address to retrieve.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the address by ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormattedAddress"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Address not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Address not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/contacts": {
+      "post": {
+        "summary": "Create a new contact for a specific customer",
+        "description": "Create a new contact and associate it with a specific customer using the customer's ID.",
+        "operationId": "createContact",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer to associate with the new contact.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cnt_phone": {
+                    "type": "string",
+                    "description": "The phone number of the contact",
+                    "example": "+123456789"
+                  },
+                  "cnt_fax": {
+                    "type": "string",
+                    "description": "The fax number of the contact",
+                    "example": "+987654321"
+                  }
+                },
+                "required": ["cnt_phone", "cnt_fax"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created a new contact for the customer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Success create contact"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - all fields must be filled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All fields must be filled"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Customer not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all contacts for a specific customer",
+        "description": "Retrieve all contact information associated with a specific customer.",
+        "operationId": "getAllContact",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer whose contacts are being retrieved.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all contacts for the specified customer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Contact"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contacts not found for the specified customer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Contact not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/contacts/{contactId}": {
+      "get": {
+        "summary": "Get a contact by ID for a specific customer",
+        "description": "Retrieve a specific contact by its ID for a specific customer.",
+        "operationId": "getContactById",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer to whom the contact belongs.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the contact to retrieve.",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the contact by ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contact not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Contact not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/orders": {
+      "post": {
+        "summary": "Create a new order for a specific customer",
+        "description": "Create a new order and associate it with a specific customer using the customer's ID.",
+        "operationId": "createOrder",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer for whom the order is created.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created a new order for the customer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - all fields must be filled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all orders for a specific customer",
+        "description": "Retrieve all orders associated with a specific customer.",
+        "operationId": "getAllOrder",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer whose orders are being retrieved.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all orders for the customer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/orders/{orderId}": {
+      "get": {
+        "summary": "Get an order by ID",
+        "description": "Retrieve a specific order by its ID, including the associated customer details.",
+        "operationId": "getOrderById",
+        "tags": ["Customers"],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the order to retrieve.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the order by ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/addresses/{addressId}": {
+      "put": {
+        "summary": "Update an existing address",
+        "description": "Update the details of an existing address using the address ID.",
+        "operationId": "updateAddress",
+        "tags": ["Addresses"],
+        "parameters": [
+          {
+            "name": "addressId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the address to be updated.",
+            "schema": {
+              "type": "integer",
+              "example": 101
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "adrs_street": {
+                    "type": "string",
+                    "description": "Street name of the address",
+                    "example": "123 New Street"
+                  },
+                  "adrs_city": {
+                    "type": "string",
+                    "description": "City of the address",
+                    "example": "Los Angeles"
+                  },
+                  "adrs_state": {
+                    "type": "string",
+                    "description": "State of the address",
+                    "example": "CA"
+                  },
+                  "adrs_postalCode": {
+                    "type": "string",
+                    "description": "Postal code of the address",
+                    "example": "90001"
+                  }
+                },
+                "required": [
+                  "adrs_street",
+                  "adrs_city",
+                  "adrs_state",
+                  "adrs_postalCode"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "previousDataAddress": {
+                      "$ref": "#/components/schemas/Address"
+                    },
+                    "updatedAddress": {
+                      "$ref": "#/components/schemas/Address"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - all fields must be filled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All fields must be filled"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Address not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Address not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an existing address",
+        "description": "Delete an existing address using the address ID.",
+        "operationId": "deleteAddress",
+        "tags": ["Addresses"],
+        "parameters": [
+          {
+            "name": "addressId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the address to be deleted.",
+            "schema": {
+              "type": "integer",
+              "example": 101
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Address not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Address not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contacts/{id}": {
+      "put": {
+        "summary": "Update an existing contact",
+        "description": "Update contact details for a specific contact by its ID.",
+        "operationId": "updateContact",
+        "tags": ["Contacts"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the contact to update.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cnt_phone": {
+                    "type": "string",
+                    "description": "The phone number of the contact",
+                    "example": "+123456789"
+                  },
+                  "cnt_fax": {
+                    "type": "string",
+                    "description": "The fax number of the contact",
+                    "example": "+987654321"
+                  }
+                },
+                "required": ["cnt_phone", "cnt_fax"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the contact.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Success update contact"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "previousDataContact": {
+                          "$ref": "#/components/schemas/Contact"
+                        },
+                        "updatedContact": {
+                          "type": "object",
+                          "properties": {
+                            "cnt_phone": {
+                              "type": "string",
+                              "example": "+123456789"
+                            },
+                            "cnt_fax": {
+                              "type": "string",
+                              "example": "+987654321"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - all fields must be filled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All fields must be filled"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contact not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Contact not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a contact by ID",
+        "description": "Delete a specific contact by its ID.",
+        "operationId": "deleteContact",
+        "tags": ["Contacts"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the contact to delete.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the contact.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Success delete contact"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contact not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Contact not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{orderId}": {
+      "put": {
+        "summary": "Update an existing order",
+        "description": "Update details of an existing order by its ID.",
+        "operationId": "updateOrder",
+        "tags": ["Orders"],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the order to update.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ord_date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "The date of the order",
+                    "example": "2023-10-15"
+                  },
+                  "ord_status": {
+                    "type": "string",
+                    "description": "The status of the order",
+                    "example": "Completed"
+                  },
+                  "ord_totalAmount": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "The total amount of the order",
+                    "example": 150.75
+                  }
+                },
+                "required": ["ord_date", "ord_status", "ord_totalAmount"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the order.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Success update order"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "previousDataOrder": {
+                          "$ref": "#/components/schemas/Order"
+                        },
+                        "updatedOrder": {
+                          "type": "object",
+                          "properties": {
+                            "ord_date": {
+                              "type": "string",
+                              "format": "date",
+                              "example": "2023-10-15"
+                            },
+                            "ord_status": {
+                              "type": "string",
+                              "example": "Completed"
+                            },
+                            "ord_totalAmount": {
+                              "type": "number",
+                              "example": 150.75
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - all fields must be filled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All fields must be filled"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Order not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an order by ID",
+        "description": "Delete a specific order by its ID.",
+        "operationId": "deleteOrder",
+        "tags": ["Orders"],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the order to delete.",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the order.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Success delete order"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Order"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Order not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "cs_id": {
+            "type": "integer",
+            "description": "Customer ID"
+          },
+          "cs_fullName": {
+            "type": "string",
+            "description": "Full name of the customer"
+          },
+          "cs_email": {
+            "type": "string",
+            "description": "Email address of the customer"
+          },
+          "cs_gender": {
+            "type": "string",
+            "enum": ["Male", "Female"],
+            "description": "Gender of the customer"
+          },
+          "cs_birthDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Birth date of the customer"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "adrs_id": {
+            "type": "integer",
+            "description": "The unique ID of the address"
+          },
+          "adrs_cs_id": {
+            "type": "integer",
+            "description": "The ID of the customer associated with this address"
+          },
+          "adrs_street": {
+            "type": "string",
+            "description": "The street name of the address"
+          },
+          "adrs_city": {
+            "type": "string",
+            "description": "The city of the address"
+          },
+          "adrs_state": {
+            "type": "string",
+            "description": "The state of the address"
+          },
+          "adrs_postalCode": {
+            "type": "string",
+            "description": "The postal code of the address"
+          }
+        },
+        "required": [
+          "adrs_cs_id",
+          "adrs_street",
+          "adrs_city",
+          "adrs_state",
+          "adrs_postalCode"
+        ]
+      },
+      "CreateAddressRequest": {
+        "type": "object",
+        "properties": {
+          "adrs_street": {
+            "type": "string",
+            "description": "The street name of the address",
+            "example": "123 Main St"
+          },
+          "adrs_city": {
+            "type": "string",
+            "description": "The city of the address",
+            "example": "New York"
+          },
+          "adrs_state": {
+            "type": "string",
+            "description": "The state of the address",
+            "example": "NY"
+          },
+          "adrs_postalCode": {
+            "type": "string",
+            "description": "The postal code of the address",
+            "example": "10001"
+          }
+        },
+        "required": [
+          "adrs_street",
+          "adrs_city",
+          "adrs_state",
+          "adrs_postalCode"
+        ]
+      },
+      "Contact": {
+        "type": "object",
+        "properties": {
+          "contact_id": {
+            "type": "integer",
+            "description": "The unique ID of the contact.",
+            "example": 10
+          },
+          "contact_name": {
+            "type": "string",
+            "description": "The name of the contact.",
+            "example": "John Doe"
+          },
+          "contact_email": {
+            "type": "string",
+            "description": "The email address of the contact.",
+            "example": "john.doe@example.com"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
+          }
+        }
+      },
+      "FormattedAddress": {
+        "type": "object",
+        "properties": {
+          "adrs_id": {
+            "type": "integer",
+            "description": "The unique ID of the address.",
+            "example": 1
+          },
+          "adrs_street": {
+            "type": "string",
+            "description": "The street name of the address.",
+            "example": "123 Main St"
+          },
+          "adrs_city": {
+            "type": "string",
+            "description": "The city of the address.",
+            "example": "New York"
+          },
+          "adrs_state": {
+            "type": "string",
+            "description": "The state of the address.",
+            "example": "NY"
+          },
+          "adrs_postalCode": {
+            "type": "string",
+            "description": "The postal code of the address.",
+            "example": "10001"
+          },
+          "customer": {
+            "type": "object",
+            "description": "Details of the customer associated with the address.",
+            "properties": {
+              "cs_id": {
+                "type": "integer",
+                "description": "The unique ID of the customer.",
+                "example": 1
+              },
+              "cs_fullName": {
+                "type": "string",
+                "description": "The full name of the customer.",
+                "example": "Jane Doe"
+              },
+              "cs_email": {
+                "type": "string",
+                "description": "The email address of the customer.",
+                "example": "jane.doe@example.com"
+              },
+              "cs_gender": {
+                "type": "string",
+                "enum": ["Male", "Female"],
+                "description": "Gender of the customer.",
+                "example": "Female"
+              },
+              "cs_birthDate": {
+                "type": "string",
+                "format": "date",
+                "description": "Birth date of the customer in YYYY-MM-DD format.",
+                "example": "1990-01-01"
+              }
+            },
+            "nullable": true
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "ord_id": {
+            "type": "integer",
+            "description": "The unique identifier for the order",
+            "example": 1
+          },
+          "ord_date": {
+            "type": "string",
+            "format": "date",
+            "description": "The date when the order was created",
+            "example": "2023-10-15"
+          },
+          "ord_status": {
+            "type": "string",
+            "description": "The current status of the order",
+            "example": "Completed"
+          },
+          "ord_totalAmount": {
+            "type": "number",
+            "format": "float",
+            "description": "The total amount for the order",
+            "example": 150.75
+          },
+          "ord_createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the order was created",
+            "example": "2023-10-15T14:48:00.000Z"
+          },
+          "ord_updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the order was last updated",
+            "example": "2023-10-16T10:15:00.000Z"
+          }
+        },
+        "required": ["ord_id", "ord_date", "ord_status", "ord_totalAmount"]
+      },
+      "UpdateOrderRequest": {
+        "type": "object",
+        "properties": {
+          "ord_date": {
+            "type": "string",
+            "format": "date",
+            "description": "The updated date for the order",
+            "example": "2023-10-15"
+          },
+          "ord_status": {
+            "type": "string",
+            "description": "The updated status of the order",
+            "example": "In Progress"
+          },
+          "ord_totalAmount": {
+            "type": "number",
+            "format": "float",
+            "description": "The updated total amount for the order",
+            "example": 200.5
+          }
+        },
+        "required": ["ord_date", "ord_status", "ord_totalAmount"]
+      },
+      "UpdateOrderResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Success update order"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "previousDataOrder": {
+                "$ref": "#/components/schemas/Order"
+              },
+              "updatedOrder": {
+                "type": "object",
+                "properties": {
+                  "ord_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2023-10-15"
+                  },
+                  "ord_status": { "type": "string", "example": "Completed" },
+                  "ord_totalAmount": {
+                    "type": "number",
+                    "format": "float",
+                    "example": 150.75
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DeleteOrderResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Success delete order"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Order"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message indicating the issue",
+            "example": "Order not found"
+          }
+        }
+      },
+      "CreateOrderRequest": {
+        "type": "object",
+        "properties": {
+          "ord_date": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-10-15"
+          },
+          "ord_status": { "type": "string", "example": "Pending" },
+          "ord_totalAmount": {
+            "type": "number",
+            "format": "float",
+            "example": 200.5
+          }
+        },
+        "required": ["ord_date", "ord_status", "ord_totalAmount"]
+      }
+    }
+  }
+}
