@@ -1,10 +1,13 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "assignment-5-customer-data",
+    "title": "Customer Management API",
     "version": "1.0.0",
-    "description": "API for managing customers",
-    "contact": {}
+    "description": "This API provides endpoints to manage customer data, including creating, updating, retrieving, and deleting customer information and associated orders.",
+    "contact": {
+      "name": "API Support",
+      "email": "rifqi@gmail.com"
+    }
   },
   "servers": [],
   "paths": {
